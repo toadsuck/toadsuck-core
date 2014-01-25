@@ -1,0 +1,28 @@
+{
+	"name": "toadsuck/core",
+	"description": "Toadsuck core components",
+	"homepage": "",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Josh Moody",
+			"email": "jgmoody@gmail.com"
+		}
+	],
+	"autoload":{
+		"psr-4":{
+			"Toadsuck\\Core\\Tests\\": "tests/",
+			"Toadsuck\\Core\\": "src/"
+		}
+	},
+
+	"require": {
+		"php": ">= 5.4",
+		"aura/router": "2.*@dev"
+	},
+
+	"require-dev": {
+		"phpunit/phpunit": "3.7.*",
+		"squizlabs/php_codesniffer": "1.*"
+	}
+}
