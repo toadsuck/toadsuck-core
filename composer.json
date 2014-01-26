@@ -1,7 +1,7 @@
 {
 	"name": "toadsuck/core",
-	"description": "Toadsuck core components",
-	"homepage": "",
+	"description": "Front controller and other core libraries used by the Toadsuck project.",
+	"homepage": "https://github.com/toadsuck/toadsuck-core",
 	"license": "MIT",
 	"authors": [
 		{
