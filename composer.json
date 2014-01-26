@@ -20,6 +20,7 @@
 		"php": ">= 5.4",
 		"aura/router": "2.*@dev",
 		"league/plates": "1.0.*",
+		"fuelphp/config": "dev-master",
 		"illuminate/database": "4.2.*@dev",
 		"prelude/prelude-dsn": "dev-master"
 	},
