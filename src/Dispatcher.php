@@ -29,35 +29,35 @@ class Dispatcher
 		$route = $this->router->match($path, $_SERVER);
 
 		if (! $route) {
-			  // no route object was returned
+			// no route object was returned
 			return $this->pageNotFound('No matching route');
 		}
 
 		// does the route indicate a controller?
 		if (isset($route->params['controller'])) {
-			  // take the controller class directly from the route
-			  $controller = ucfirst(strtolower($route->params['controller']));
+			// take the controller class directly from the route
+			$controller = ucfirst(strtolower($route->params['controller']));
 		} else {
-			  // use a default controller
-			  $controller = 'Home';
+			// use a default controller
+			$controller = 'Home';
 		}
 
 		// does the route indicate an action?
 		if (isset($route->params['action'])) {
-			  // take the action method directly from the route
-			  $action = $route->params['action'];
+			// take the action method directly from the route
+			$action = $route->params['action'];
 		} else {
-			  // use a default action
-			  $action = 'index';
+			// use a default action
+			$action = 'index';
 		}
 
 		// does the route indicate an id?
 		if (isset($route->params['id'])) {
-			  // take the action method directly from the route
-			  $id = $route->params['id'];
+			// take the action method directly from the route
+			$id = $route->params['id'];
 		} else {
-			  // use a default action
-			  $id = null;
+			// use a default action
+			$id = null;
 		}
 
 		// instantiate the controller class
