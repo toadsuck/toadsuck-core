@@ -90,14 +90,9 @@ class Dispatcher
 			// Fall back on some sensible defaults.
 			// Add some basic routes
 			$router->add(null, null);
-
 			$router->add(null, '/');
-
 			$router->add(null, '/{controller}');
-
-			// add a simple unnamed route with params
 			$router->add(null, '/{controller}/{action}');
-
 			$router->add(null, '/{controller}/{action}/{id}');
 		}
 
