@@ -19,6 +19,11 @@ class Dispatcher
 
 		$this->opts = $opts;
 
+		// @todo I feel a little dirty about this. Will revisit later.
+		if (array_key_exists('app_dir', $opts)) {
+			$GLOBALS['TOADSUCK_BASE_PATH'] = $opts['app_dir'];
+		}
+		
 		$this->getRoutes();
 	}
 
@@ -133,10 +138,10 @@ class Dispatcher
 
 	public function getAppResourcePath($file = null)
 	{
-		return $this->getAppDir() . '/' . $file;
+		return $this->getSrcDir() . '/' . $file;
 	}
 
-	public function getAppDir()
+	public function getSrcDir()
 	{
 		return array_key_exists('app_dir', $this->opts) ? $this->opts['app_dir'] . '/src' : dirname(__DIR__) . '/src';
 	}
