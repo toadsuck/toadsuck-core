@@ -45,7 +45,7 @@ class Controller
 	 */
 	public function redirect($url)
 	{
-		if (!preg_match('/^http/', $url)){
+		if (!preg_match('/^http/', $url)) {
 			// Internal redirect
 			$url = DIRECTORY_SEPARATOR . trim($url, DIRECTORY_SEPARATOR);
 			$url = $this->template->uri($url);
