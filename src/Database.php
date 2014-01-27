@@ -16,13 +16,17 @@ class Database
 			'host'		=> 'localhost',
 			'database'	=> 'mysql',
 			'username'	=> 'root',
-			'password'	=> 'root',
+			'password'	=> null,
 			'charset'	=> 'utf8',
 			'collation'	=> 'utf8_unicode_ci',
 			'prefix'	=> null
 		];
 		
 		$capsule = new Capsule;
+
+		if (is_string($config)) {
+			$config = self::parseDsn($config);
+		}
 		
 		if (is_array($config)) {
 			$options = array_merge($defaults, $config);
