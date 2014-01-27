@@ -7,10 +7,16 @@ namespace Toadsuck\Core;
  */
 class Template extends \League\Plates\Template
 {
-
-	public function __construct(\League\Plates\Engine $engine)
+	public $toadsuck_base_path = null;
+	public $engine;
+	
+	public function __construct($path = null)
 	{
-		parent::__construct($engine);
+		
+		// Create a new engine with the proper path to views directory.
+		$this->engine = new \League\Plates\Engine($path);
+		
+		parent::__construct($this->engine);
 	}
 
 	public function uri($resource)
@@ -29,5 +35,10 @@ class Template extends \League\Plates\Template
 	public function output($view, $data = null)
 	{
 		echo $this->render($view, $data);
+	}
+	
+	public function addFolder($name, $path)
+	{
+		$this->engine->addFolder($name, $path);
 	}
 }
