@@ -1,6 +1,7 @@
 <?php
-
 namespace Toadsuck\Core;
+
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Extension to Plates to work better with our routing.
@@ -51,7 +52,8 @@ class Template extends \League\Plates\Template
 	 */
 	public function output($view, array $data = null)
 	{
-		echo $this->render($view, $data);
+		$response = new Response($this->render($view, $data), Response::HTTP_OK, ['Content-Type' => 'text/html']);
+		$response->send();
 	}
 	
 	public function addFolder($name, $path)

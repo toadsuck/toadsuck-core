@@ -5,12 +5,18 @@ namespace Toadsuck\Core;
 use Toadsuck\Core\Template;
 use Toadsuck\Core\Config;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 class Controller
 {
 	public $plates = null;
 	public $template = null;
 	public $base_path = null;
 	public $config = null;
+	public $request = null;
 		
 	public function __construct()
 	{
@@ -22,22 +28,8 @@ class Controller
 
 		// Set up configs.
 		$this->config = new Config($this->getEnvironment(), $this->resolvePath('config'));
-	}
-	
-	public function httpError($code = '404', $message = null)
-	{
-		switch($code) {
-			case '404':
-				header("HTTP/1.0 404 Not Found");
-				print "404 Page Not Found";
-				break;
-			default:
-				header("HTTP/1.0 " . $code);
-				print $message;
-				break;
-		}
 		
-		exit;
+		$this->request = Request::createFromGlobals();
 	}
 
 	/**
@@ -51,8 +43,23 @@ class Controller
 			$url = $this->template->uri($url);
 		}
 		
-		header("Location: $url");
-		exit;
+		$response = new RedirectResponse($url);
+		$response->send();
+	}
+
+	public function json($content = [])
+	{
+		$response = new JsonResponse();
+		$response->setData($content);
+		$response->send();
+	}
+	
+	public function jsonp($content = [], $jsonCallback = 'callback')
+	{
+		$response = new JsonResponse();
+		$response->setData($content);
+		$response->setCallback($jsonCallback);
+		$response->send();
 	}
 	
 	protected function resolvePath($resource)
@@ -75,6 +82,8 @@ class Controller
 
 	public function __call($method = null, $args = null)
 	{
-		$this->httpError('404', 'Method does not exist');
+		// Send a 404 for any methods that don't exist.
+		$response = new Response('Not Found', 404, ['Content-Type' => 'text/plain']);
+		$response->send();
 	}
 }
