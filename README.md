@@ -1,12 +1,15 @@
 # Toadsuck.Core
 
-## Front controller and other core libraries used by the [Toadsuck Project](http://toadsuck.github.io)
+## Core libraries for the [Toadsuck Project](http://toadsuck.github.io)
 
-This library provides a basic front controller to provide routing and dispatching for your PHP app.
+- Routing - [Aura.Router](https://github.com/auraphp/Aura.Router)
+- HTTP Abstraction - [Symfony\HttpFoundation](https://github.com/symfony/HttpFoundation)
+- Templates - [Plates Native PHP Templates](http://platesphp.com/)
+- Database Abstraction - [Illuminate\Database](https://github.com/illuminate/database)
+- Configuration Management - [FuelPHP\Config](https://github.com/fuelphp/config)
+- Unit Tests - [PHPUnit](https://github.com/sebastianbergmann/phpunit) (of course, why use anything else?)
 
-Routing is implemented using [Aura.Router](https://github.com/auraphp/Aura.Router) from [The Aura Project for PHP](http://auraphp.com/).
-
-See [Toadsuck.Skeleton](https://github.com/toadsuck/toadsuck-skeleton) for an example implementation, or keep reading.
+Learn more at [The Toadsuck Project](http://toadsuck.github.io) or see [Toadsuck.Skeleton](https://github.com/toadsuck/toadsuck-skeleton) for a reference implementation.
 
 ## Installation
 Installation of this package is easy with Composer. If you aren't familiar with the Composer Dependency Manager for PHP, [you should read this first](https://getcomposer.org/doc/00-intro.md).
@@ -26,32 +29,44 @@ Create a file named composer.json someplace (usually in the root of your project
 	}
 }
 ```
+## Suggested Directory Structure
 
-## Example Usage:
-
-Assume the following directory structure:
+- Your application resides in `src/` and has a base namespace of `Example\Project`
+- Your controllers are in `src/controllers/` and have a namespace of `Example\Project\Controllers`
+	- Your controllers extend `Toadsuck\Core\Controller`
 
 ```
 src/
+	config/
+		local/
+			config.php
+		test/
+		prod/
+		config.php
+		routes.php
 	controllers/
 		Home.php
+	models/
+	views/
+		home/
+			index.php
+		layouts/
+			default.php
 vendor/
+	Composer's installation directory
 web/
 	index.php
-composer.json
-
+	composer.json
 ```
 
-- Your application resides in `src/` and has a base namespace of `Example\Project`
-- Your controllers are in `src/controllers/` ahd have a namespace of `Example\Project\Controllers`
-- Your web/index.php contains the following content:
+## Front Controller
+Your `web/index.php` serves as the front controller and contains the following content:
 
 ``` php
 <?php
+# File: web/index.php
 
-namespace Example\Project;
-
-# Filename: web/index.php
+namespace Example\Project; // Change this to whatever base namespace you are using in your project.
 
 $app_dir = dirname(__DIR__);
 
@@ -66,8 +81,13 @@ $app = new \Toadsuck\Core\Dispatcher($opts);
 // Dispatch the request.
 $app->dispatch();
 ```
-### Default Routes
-Some sensible default routes are provided out of the box.
+
+This will turn control of dispatching the request to the Toadsuck.Core dispatcher.
+
+## Routing
+Routing is handled by the [Aura Router](https://github.com/auraphp/Aura.Router).
+
+Some sensible default routes are provided out of the box in the dispatcher.
 
 ``` php
 $router->add(null, null);
@@ -79,17 +99,17 @@ $router->add(null, '/{controller}/{action}/{id}');
 
 The following will all call the `index()` method of your `Home` controller.
 
-- http://example.com/path/to/index.php
-- http://example.com/path/to/index.php/home
-- http://example.com/path/to/index.php/home/index
+>- http://example.com/path/to/index.php
+>- http://example.com/path/to/index.php/home
+>- http://example.com/path/to/index.php/home/index
 
 This one will also call `index`, but will also pass the value "1" to the index method.
 
-- http://example.com/path/to/index.php/home/index/1
+>- http://example.com/path/to/index.php/home/index/1
 
 Likewise, you can call the `bar()` method of the `Foo` controller like this:
 
-- http://example.com/path/to/index.php/foo/bar
+>- http://example.com/path/to/index.php/foo/bar
 
 If you want to supply different routes, just create a `config` directory under source with a 
 file named `routes.php` that defines the routes you need.
@@ -102,3 +122,173 @@ src/
 ```
 
 For more information on routing options, see <https://github.com/auraphp/Aura.Router>.
+
+## Configuration
+The configuration manger is built on [FuelPHP\Config](https://github.com/fuelphp/config)
+
+### Basic Configuration Usage
+
+``` php
+// Load our primary config file.
+$this->config->load('config');
+
+$something = $this->config->get('something');
+
+// You can load any configuration file...
+$this->config->load('database');
+
+```
+
+### Multiple Environment Configuration Support
+
+The configuration manager supports different configs for different environments (local, dev, test, prod, etc).
+To activate per-environment configs, create a sub-directory of `src/config` named the same as your environment.
+This directory should contain configuration files with any items from the main config you want to override in that environment.
+
+Example:
+
+	src/config/test/database.php
+
+You can tell the app which environment you are running in by modifying the content of `src/config/environment` to contain the name of your active environment.
+
+Then load your config as you normally would. The configuration items will be merged between the default config environment-specific overrides.
+
+See the [FuelPHP Docs](https://github.com/fuelphp/config/blob/master/README.md) for more information on configuration management.
+
+## Templates
+Templates are powered by the [Plates Project](http://platesphp.com/), which is part of [The League of Extraordinary Packages](http://thephpleague.com/).
+
+Within this project, all themes and layouts live in `src/views`.
+
+### Basic Template Usage
+
+``` php
+class Home extends Controller
+{
+	public function __construct()
+	{
+		// Set our default template.
+		$this->template->layout('layouts/default');
+	}
+	
+	public function index()
+	{
+		// Set some variables for all views.
+		$this->template->page_title = 'Toadsuck Skeleton';
+		
+		// Render and Display the home/index view, passing a variable named "heading".
+		$this->template->output('home/index', ['heading' => 'Congratulations, it worked!']);
+		
+		// Same as above, but return the rendered content instead of displaying.
+		// $content = $this->template->render('home/index', ['heading' => 'Congratulations, it worked!']);
+	}
+}
+```
+
+I've extended the standard Template class from Plates in 2 important ways:
+
+- 1) I've added the `output()` method so you can display the rendered view without an `echo` if you like.
+- 2) All variables are escaped before rendering/displaying the content to prevent cross site scripting.
+
+
+See the [Plates Project documentation](http://platesphp.com/) for more information on template usage.
+
+## HTTP Abstraction
+HTTP Abstraction is provided by [Symfony\HttpFoundation](https://github.com/symfony/HttpFoundation). This provides useful things like:
+
+- Object-Oriented access to `$_GET`, `$_POST`, `$_SESSION`, `$_COOKIE`, etc.
+- Internal/External Redirects
+- JSON/JSONP Responses
+
+``` php
+namespace Example\Project\Controllers;
+
+use Illuminate\Database\Capsule\Manager as Model;
+use Toadsuck\Core\Controller;
+use Toadsuck\Core\Database as DB;
+use Toadsuck\Skeleton\Models\Widget;
+
+class Home extends Controller
+{
+	// Internal Redirect (another resource in our app)
+	public function internalRedirect()
+	{
+		$this->redirect('home/foo'); # Foo method of the Home Controller.
+	}
+
+	// External Redirect
+	public function externalRedirect()
+	{
+		$this->redirect('http://www.google.com');
+	}
+	
+	// Output data json-encoded with proper headers.
+	public function getJson()
+	{
+		$data = (object) ['items' => ['foo', 'bar']];
+		$this->json($data);
+	}
+
+	// Output data json-encoded with proper headers and callback.
+	// Default callback name is 'callback'
+	public function getJsonp()
+	{
+		$data = (object) ['items' => ['foo', 'bar']];
+		$this->jsonp($data, 'callback');
+	}
+}
+```
+
+See the [Symfony Docs](http://symfony.com/doc/current/components/http_foundation/introduction.html) for more
+information on the HttpFoundation component.
+
+## Database
+Database abstraction is handled by [Illuminate\Database](https://github.com/illuminate/database)
+
+Your model:
+
+``` php
+# File: src/models/Widget.php
+
+namespace Example\Project\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Widgets extends Model
+{
+	public $timestamps = false; # Aren't using the default timestamp columns
+}
+```
+
+Then where you want to use the database:
+``` php
+use Toadsuck\Core\Database as DB;
+
+/*
+DSN can be pear-style DSN string: mysql://username:password@host/database OR an array
+
+$defaults = [
+	'driver'	=> 'mysql',
+	'host'		=> 'localhost',
+	'database'	=> 'mysql',
+	'username'	=> 'root',
+	'password'	=> null,
+	'charset'	=> 'utf8',
+	'collation'	=> 'utf8_unicode_ci',
+	'prefix'	=> null
+];
+*/
+
+DB::init($dsn);
+
+// Get all widgets:
+$widgets = Widgets::all()->toArray();
+
+foreach ($widgets as $widget) {
+	var_dump($widget['type']);
+	var_dump($widget['size']);
+	var_dump($widget['color']);
+}
+```
+
+See the [Laravel Documentation](http://laravel.com/docs/database) for more info on database usage.
