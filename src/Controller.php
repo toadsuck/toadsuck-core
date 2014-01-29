@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class Controller
 {
@@ -29,7 +30,12 @@ class Controller
 		// Set up configs.
 		$this->config = new Config($this->getEnvironment(), $this->resolvePath('config'));
 		
+		// Get info about the HTTP Request
 		$this->request = Request::createFromGlobals();
+
+		// Setup the session
+		$this->session = new Session();
+		$this->session->start();
 	}
 
 	/**
