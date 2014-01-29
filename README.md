@@ -25,7 +25,7 @@ Create a file named composer.json someplace (usually in the root of your project
 ``` json
 {
 	"require": {
-		"joshmoody/mock-data": "dev-master"
+		"toadsuck/core": "dev-master"
 	}
 }
 ```
