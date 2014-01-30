@@ -3,6 +3,8 @@
 namespace Toadsuck\Core;
 
 use Aura\Router\RouterFactory;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Dispatcher
 {
@@ -29,13 +31,22 @@ class Dispatcher
 
 	public function dispatch()
 	{
-		$path = $this->getUrlPath();
+		// What resource was requested?
+		$request = Request::createFromGlobals();
 
+		$path = $request->getPathInfo();
+
+		// Remove trailing slash from the path. This gives us a little more forgiveness in routing
+		if ($path != '/') {
+			$path = rtrim($path, '/'); 
+		}
+		
+		// Find a matching route
 		$route = $this->router->match($path, $_SERVER);
 
-		if (! $route) {
+		if (!$route) {
 			// no route object was returned
-			return $this->pageNotFound('No matching route');
+			return $this->pageNotFound();
 		}
 
 		// does the route indicate a controller?
@@ -69,7 +80,7 @@ class Dispatcher
 		$class = join('\\', [$this->namespace, 'Controllers', $controller]);
 
 		if (!class_exists($class)) {
-			return $this->pageNotFound('Controller not found.');
+			return $this->pageNotFound();
 		} else {
 			$page = new $class();
 
@@ -93,8 +104,6 @@ class Dispatcher
 			include_once($routes_file);
 		} else {
 			// Fall back on some sensible defaults.
-			// Add some basic routes
-			$router->add(null, null);
 			$router->add(null, '/');
 			$router->add(null, '/{controller}');
 			$router->add(null, '/{controller}/{action}');
@@ -104,36 +113,10 @@ class Dispatcher
 		$this->router = $router;
 	}
 
-	/**
-	 * Determine what the requested path is so we can pass it to the router.
-	 */
-	public function getUrlPath()
+	public function pageNotFound($message = 'Not Found')
 	{
-		$path = '/';
-
-		if (array_key_exists('PATH_INFO', $_SERVER)) {
-			$path = $_SERVER['PATH_INFO'];
-		} else {
-			// get the route based on the path and server
-			$path = str_replace(dirname($_SERVER['SCRIPT_NAME']), '', $_SERVER['REQUEST_URI']);
-		}
-
-		if ($path == '/' . basename($_SERVER['SCRIPT_NAME'])) {
-			$path = '/';
-		}
-		
-		return $path;
-	}
-
-	public function pageNotFound($message = null)
-	{
-		header('HTTP/1.0 404 Not Found');
-
-		if (!empty($message)) {
-			print $message;
-		}
-
-		exit;
+		$response = new Response($message, 404, ['Content-Type' => 'text/plain']);
+		$response->send();
 	}
 
 	public function getAppResourcePath($file = null)
