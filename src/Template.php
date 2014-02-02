@@ -1,10 +1,11 @@
 <?php
 namespace Toadsuck\Core;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Extension to Plates to work better with our routing.
+ * Extension to Plates to work better with our routing and auto-sanitize view variables.
  */
 class Template extends \League\Plates\Template
 {
@@ -12,7 +13,6 @@ class Template extends \League\Plates\Template
 	
 	public function __construct($path = null)
 	{
-		
 		// Create a new engine with the proper path to views directory.
 		$this->engine = new \League\Plates\Engine($path);
 		
@@ -41,7 +41,7 @@ class Template extends \League\Plates\Template
 			}
 		}
 	
-		// Also sanitize any variables we are passing in to the tempalte
+		// Also sanitize any variables we are passing in to the template
 		$data = $this->scrub($data);
 
 		return parent::render($view, $data);
@@ -71,7 +71,7 @@ class Template extends \League\Plates\Template
 			return $this->escape($var);
 	
 		} elseif (is_array($var)) {
-			// Santize arrays.
+			// Sanitize arrays
 			while (list($key) = each($var)) {
 				$var[$key] = $this->scrub($var[$key]);
 			}
