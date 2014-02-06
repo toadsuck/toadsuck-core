@@ -254,7 +254,7 @@ namespace Example\Project\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Widgets extends Model
+class Widget extends Model
 {
 	public $timestamps = false; # Aren't using the default timestamp columns
 }
@@ -282,7 +282,7 @@ $defaults = [
 DB::init($dsn);
 
 // Get all widgets:
-$widgets = Widgets::all()->toArray();
+$widgets = Widget::all()->toArray();
 
 foreach ($widgets as $widget) {
 	var_dump($widget['type']);
