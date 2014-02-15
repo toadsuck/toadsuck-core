@@ -38,7 +38,7 @@ class Dispatcher
 
 		// Remove trailing slash from the path. This gives us a little more forgiveness in routing
 		if ($path != '/') {
-			$path = rtrim($path, '/'); 
+			$path = rtrim($path, '/');
 		}
 		
 		// Find a matching route
