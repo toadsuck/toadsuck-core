@@ -190,6 +190,13 @@ I've extended the standard Template class from Plates in 2 important ways:
 - 1) I've added the `output()` method so you can display the rendered view without an `echo` if you like.
 - 2) All variables are escaped before rendering/displaying the content to prevent cross site scripting.
 
+If there are variables you don't want auto-escaped (example: pre-rendered HTML), you can prevent escaping by calling `unguard('param_name')`.
+
+``` php
+$this->template->unguard('html');
+$this->template->output('home/index', ['html' => '<p>Some <strong>markup</strong>.</p>']);
+```
+
 
 See the [Plates Project documentation](http://platesphp.com/) for more information on template usage.
 
