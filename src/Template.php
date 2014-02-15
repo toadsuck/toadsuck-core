@@ -10,12 +10,13 @@ use Symfony\Component\HttpFoundation\Response;
 class Template extends \League\Plates\Template
 {
 	public $engine;
-	
+	protected $unguarded = ['unguarded', 'engine'];
+
 	public function __construct($path = null)
 	{
 		// Create a new engine with the proper path to views directory.
 		$this->engine = new \League\Plates\Engine($path);
-		
+
 		parent::__construct($this->engine);
 	}
 
@@ -28,7 +29,7 @@ class Template extends \League\Plates\Template
 	{
 		return dirname($_SERVER['SCRIPT_NAME']) . $resource;
 	}
-	
+
 	/**
 	 * Sanitize the data before rendering.
 	 */
@@ -36,17 +37,17 @@ class Template extends \League\Plates\Template
 	{
 		// Sanitize variables already in the template.
 		foreach (get_object_vars($this) as $key => $value) {
-			if ($key != 'engine') {
+			if (!in_array($key, $this->unguarded)) {
 				$this->$key = $this->scrub($value);
 			}
 		}
-	
+
 		// Also sanitize any variables we are passing in to the template
 		$data = $this->scrub($data);
 
 		return parent::render($view, $data);
 	}
-	
+
 	/**
 	 * Output the content instead of just render.
 	 */
@@ -55,7 +56,7 @@ class Template extends \League\Plates\Template
 		$response = new Response($this->render($view, $data), Response::HTTP_OK, ['Content-Type' => 'text/html']);
 		$response->send();
 	}
-	
+
 	public function addFolder($name, $path)
 	{
 		$this->engine->addFolder($name, $path);
@@ -69,26 +70,40 @@ class Template extends \League\Plates\Template
 		if (is_string($var)) {
 			// Sanitize strings
 			return $this->escape($var);
-	
+
 		} elseif (is_array($var)) {
 			// Sanitize arrays
 			while (list($key) = each($var)) {
-				$var[$key] = $this->scrub($var[$key]);
+				if (!in_array($key, $this->unguarded)) {
+					// We don't want to escape this item
+					$var[$key] = $this->scrub($var[$key]);
+				}
 			}
-	
+
 			return $var;
 		} elseif (is_object($var)) {
 			// Sanitize objects
 			$values = get_object_vars($var);
-	
+
 			foreach ($values as $key => $value) {
 				$var->$key = $this->scrub($value);
 			}
 			return $var;
-	
+
 		} else {
 			// Not sure what this is. null or bool? Just return it.
 			return $var;
+		}
+	}
+
+	public function unguard($key)
+	{
+		if (is_array($key)) {
+			foreach ($key as $k) {
+				$this->unguard($k);
+			}
+		} else {
+			$this->unguarded[] = $key;
 		}
 	}
 }
