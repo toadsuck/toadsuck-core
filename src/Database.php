@@ -62,7 +62,7 @@ class Database
 				'host'		=> $dsn->host,
 				'database'	=> $dsn->dbname,
 				'username'	=> $dsn->user,
-				'password'	=> $dsn->pass
+				'password'	=> isset($dsn->pass) ? $dsn->pass : null
 			];
 		}
 
