@@ -23,12 +23,12 @@ class Controller
 	{
 		// We need to know paths to our resources.
 		$this->base_path = rtrim($GLOBALS['TOADSUCK_BASE_PATH'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'src';
-		
-		// Set up the template engine.
-		$this->template = new Template($this->resolvePath('views'));
 
 		// Set up configs.
-		$this->config = new Config($this->getEnvironment(), $this->resolvePath('config'));
+		$this->config = new Config();
+		
+		// Set up the template engine.
+		$this->template = new Template($this->config->resolvePath('views'));
 		
 		// Get info about the HTTP Request
 		$this->request = Request::createFromGlobals();
@@ -66,24 +66,6 @@ class Controller
 		$response->setData($content);
 		$response->setCallback($jsonCallback);
 		$response->send();
-	}
-	
-	protected function resolvePath($resource)
-	{
-		return rtrim($this->base_path . DIRECTORY_SEPARATOR . $resource, DIRECTORY_SEPARATOR);
-	}
-	
-	protected function getEnvironment()
-	{
-		$environment_file = $this->resolvePath('config/environment');
-		
-		if (file_exists($environment_file)) {
-			$environment = trim(file_get_contents($environment_file));
-		} else {
-			$environment = 'local';
-		}
-		
-		return $environment;
 	}
 
 	public function __call($method = null, $args = null)
