@@ -52,7 +52,7 @@ class ControllerTests extends \PHPUnit_Framework_TestCase
 	public function testCanOutputTemplate()
 	{
 		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
-		$controller->renderTemplate();
+		$controller->outputTemplate();
 
 		$this->expectOutputString('<p>bar</p>');
 	}
