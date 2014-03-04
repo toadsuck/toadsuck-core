@@ -13,6 +13,7 @@
 		"psr-4":{
 			"Toadsuck\\Core\\Tests\\": "tests/",
 			"Toadsuck\\Core\\Tests\\App\\": "tests/resources/",
+			"Toadsuck\\Core\\Tests\\App\\Controllers\\": "tests/resources/controllers/",
 			"Toadsuck\\Core\\": "src/"
 		}
 	},
