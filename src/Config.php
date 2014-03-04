@@ -8,19 +8,28 @@ namespace Toadsuck\Core;
 class Config
 {
 	public $config = null;
-	public $bash_path = null;
+	public $base_path = null;
 	
-	public function __construct($environment = null, $path = null)
+	public function __construct($base_path = null)
 	{
 		// We need to know paths to our resources.
-		$this->base_path = rtrim($GLOBALS['TOADSUCK_BASE_PATH'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'src';		
+		if (!empty($base_path)) {
+			$this->base_path = $base_path;
+		} elseif (array_key_exists('TOADSUCK_BASE_PATH', $GLOBALS)) {
+			$this->base_path = rtrim($GLOBALS['TOADSUCK_BASE_PATH'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'src';
+		} else {
+			throw new \Exception('base_path not defined!');
+		}
 		
 		// determine our environment and config path
 		$environment = $this->getEnvironment();
 		$path = $this->resolvePath('config');
 		
 		// Set up configs.
-		class_alias('Fuel\Common\Arr', 'Arr');
+		if (!class_exists('Arr')) {
+			class_alias('Fuel\Common\Arr', 'Arr');
+		}
+
 		$this->config = new \Fuel\Config\Container($environment);
 		$this->config->setConfigFolder('');
 		

@@ -15,17 +15,17 @@ class Controller
 {
 	public $plates = null;
 	public $template = null;
-	public $base_path = null;
 	public $config = null;
 	public $request = null;
+	public $ds = DIRECTORY_SEPARATOR;
 		
-	public function __construct()
+	public function __construct($opts = [])
 	{
-		// We need to know paths to our resources.
-		$this->base_path = rtrim($GLOBALS['TOADSUCK_BASE_PATH'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'src';
-
+		// Where is our app's source code?
+		$app_dir = array_key_exists('app_dir', $opts) ? $opts['app_dir'] : null;
+		
 		// Set up configs.
-		$this->config = new Config();
+		$this->config = new Config($app_dir);
 		
 		// Set up the template engine.
 		$this->template = new Template($this->config->resolvePath('views'));
@@ -35,7 +35,6 @@ class Controller
 
 		// Setup the session
 		$this->session = new Session();
-		$this->session->start();
 	}
 
 	/**
