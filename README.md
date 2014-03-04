@@ -113,7 +113,7 @@ Likewise, you can call the `bar()` method of the `Foo` controller like this:
 
 >- http://example.com/path/to/index.php/foo/bar
 
-If you want to supply different routes, just create a `config` directory under source with a 
+If you want to supply different routes, just create a `config` directory under source with a
 file named `routes.php` that defines the routes you need.
 
 
@@ -172,15 +172,15 @@ class Home extends Controller
 		// Set our default template.
 		$this->template->layout('layouts/default');
 	}
-	
+
 	public function index()
 	{
 		// Set some variables for all views.
 		$this->template->page_title = 'Toadsuck Skeleton';
-		
+
 		// Render and Display the home/index view, passing a variable named "heading".
 		$this->template->output('home/index', ['heading' => 'Congratulations, it worked!']);
-		
+
 		// Same as above, but return the rendered content instead of displaying.
 		// $content = $this->template->render('home/index', ['heading' => 'Congratulations, it worked!']);
 	}
@@ -230,7 +230,7 @@ class Home extends Controller
 	{
 		$this->redirect('http://www.google.com');
 	}
-	
+
 	// Output data json-encoded with proper headers.
 	public function getJson()
 	{

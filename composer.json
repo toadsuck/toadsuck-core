@@ -12,6 +12,7 @@
 	"autoload":{
 		"psr-4":{
 			"Toadsuck\\Core\\Tests\\": "tests/",
+			"Toadsuck\\Core\\Tests\\App\\": "tests/resources/",
 			"Toadsuck\\Core\\": "src/"
 		}
 	},
