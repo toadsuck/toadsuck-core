@@ -96,6 +96,33 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('James', $result->first_name);
 	}
 
+	public function testORMQueryBuilderShouldReturnEmptyArray()
+	{
+		$this->databaseInit();
+
+		$result = \Toadsuck\Core\Tests\App\Models\Captain::search(['first_name' => 'James', 'last_name' => 'Picard']);
+
+		$this->assertTrue(empty($result));
+	}
+
+	public function testORMQueryBuilderShouldReturnOneResult()
+	{
+		$this->databaseInit();
+
+		$result = \Toadsuck\Core\Tests\App\Models\Captain::search(['first_name' => 'James']);
+
+		$this->assertTrue(count($result) == 1);
+	}
+
+	public function testORMQueryBuilderShouldReturnThreeResults()
+	{
+		$this->databaseInit();
+
+		$result = \Toadsuck\Core\Tests\App\Models\Captain::search(['first_name' => 'J']);
+
+		$this->assertTrue(count($result) == 3);
+	}
+
 	protected function getTestDsn()
 	{
 		return ['driver' => 'sqlite','database' => __DIR__ . '/resources/storage/example.sqlite'];
