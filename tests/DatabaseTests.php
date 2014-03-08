@@ -15,7 +15,7 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey('database', $dsn);
 		$this->assertArrayHasKey('username', $dsn);
 		$this->assertArrayHasKey('password', $dsn);
-		
+
 		$this->assertEquals('mysql', $dsn['driver']);
 		$this->assertEquals('hostname', $dsn['host']);
 		$this->assertEquals('un', $dsn['username']);
@@ -49,5 +49,60 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('hostname', $dsn['host']);
 		$this->assertEquals('un', $dsn['username']);
 		$this->assertEquals(null, $dsn['password']);
+	}
+
+	public function testCanQueryORM()
+	{
+		$this->databaseInit();
+
+		$result = \Toadsuck\Core\Tests\App\Models\Captain::where('last_name', 'Kirk')->first();
+		$this->assertEquals('James', $result->first_name);
+	}
+
+	public function testChainedQueryBuilder()
+	{
+		$this->databaseInit();
+
+		$result = (object) \Illuminate\Database\Capsule\Manager::table('captains')->where('last_name', 'Kirk')->first();
+		$this->assertEquals('James', $result->first_name);
+	}
+
+	public function testUnhainedQueryBuilder()
+	{
+		$this->databaseInit();
+
+		$query = \Illuminate\Database\Capsule\Manager::table('captains');
+		$query->where('last_name', 'Kirk');
+
+		$result = (object) $query->first();
+		$this->assertEquals('James', $result->first_name);
+	}
+
+	public function testORMChainedQuery()
+	{
+		$this->databaseInit();
+
+		$result = (object) \Toadsuck\Core\Tests\App\Models\Captain::queryBuilder()->where('last_name', 'Kirk')->first();
+		$this->assertEquals('James', $result->first_name);
+	}
+
+	public function testORMUnchainedQuery()
+	{
+		$this->databaseInit();
+
+		$query = \Toadsuck\Core\Tests\App\Models\Captain::queryBuilder();
+		$query->where('last_name', 'Kirk');
+		$result = (object) $query->first();
+		$this->assertEquals('James', $result->first_name);
+	}
+
+	protected function getTestDsn()
+	{
+		return ['driver' => 'sqlite','database' => __DIR__ . '/resources/storage/example.sqlite'];
+	}
+
+	protected function databaseInit()
+	{
+		Database::init($this->getTestDsn());
 	}
 }

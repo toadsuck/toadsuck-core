@@ -2,3 +2,4 @@
 ._*
 /vendor
 /composer.lock
+/tests/coverage-report/
