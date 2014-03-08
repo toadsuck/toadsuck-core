@@ -2,7 +2,7 @@
 
 ## Core libraries for the [Toadsuck Project](http://toadsuck.github.io)
 
-[![Total Downloads](https://poser.pugx.org/toadsuck/core/downloads.png)](https://packagist.org/packages/toadsuck/core) [![Latest Stable Version](https://poser.pugx.org/toadsuck/core/v/stable.png)](https://packagist.org/packages/toadsuck/core)
+[![Build Status](https://travis-ci.org/toadsuck/toadsuck-core.png?branch=master)](https://travis-ci.org/toadsuck/toadsuck-core) [![Total Downloads](https://poser.pugx.org/toadsuck/core/downloads.png)](https://packagist.org/packages/toadsuck/core) [![Latest Stable Version](https://poser.pugx.org/toadsuck/core/v/stable.png)](https://packagist.org/packages/toadsuck/core)
 
 - Routing - [Aura.Router](https://github.com/auraphp/Aura.Router)
 - HTTP Abstraction - [Symfony\HttpFoundation](https://github.com/symfony/HttpFoundation)
