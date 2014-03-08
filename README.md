@@ -269,7 +269,43 @@ class Widget extends Model
 }
 ```
 
-Then where you want to use the database:
+#### Instead of extending Eloquent\Model directly, you can extend Toadsuck\Core\Model (which extends Eloquent) to get easier access to the query builder.
+
+``` php
+# File: src/models/Widget.php
+
+namespace Example\Project\Models;
+
+use Toadsuck\Core\Model;
+
+class Widget extends Model
+{
+	public $timestamps = false; # Aren't using the default timestamp columns
+	
+	public static function search($params = null)
+	{
+		$query = self::queryBuilder();
+		
+		if (array_key_exists('firstname', $params))
+		{
+			$query->where('firstname', $params['firstname']); 
+		}
+
+		if (array_key_exists('lastname', $params))
+		{
+			$query->where('lastname', $params['lastname']); 
+		}
+		
+		return $query->get();
+	}
+	
+}
+```
+
+> See tests/resources/models/Captain for a working example.
+
+#### Initialize the database before you try to use it.
+
 ``` php
 use Toadsuck\Core\Database as DB;
 
@@ -289,9 +325,13 @@ $defaults = [
 */
 
 DB::init($dsn);
+```
 
+#### Once your database has been initialized, you can call your ORM models from anywhere.
+
+``` php
 // Get all widgets:
-$widgets = Widget::all()->toArray();
+$widgets = \Example\Project\Models\Widget::all()->toArray();
 
 foreach ($widgets as $widget) {
 	var_dump($widget['type']);
@@ -299,5 +339,13 @@ foreach ($widgets as $widget) {
 	var_dump($widget['color']);
 }
 ```
+> See the [Laravel Eloquent Documentation](http://laravel.com/docs/eloquent) for more info on the ORM.
 
-See the [Laravel Documentation](http://laravel.com/docs/database) for more info on database usage.
+#### You also have access to the fluent query builder.
+
+``` php
+use Illuminate\Database\Capsule\Manager as QueryBuilder;
+
+$result = QueryBuilder::table('captains')->where('lastname', 'Kirk')->get();
+```
+> See the [Laravel Database Documentation](http://laravel.com/docs/database) for more info on the fluent query builder.
