@@ -14,6 +14,6 @@ class Console
 		$app_dir = array_key_exists('app_dir', $opts) ? $opts['app_dir'] : null;
 
 		// Set up configs.
-		$this->config = new Config();
+		$this->config = new Config($app_dir);
 	}
 }

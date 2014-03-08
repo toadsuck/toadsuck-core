@@ -65,6 +65,13 @@ class ControllerTests extends \PHPUnit_Framework_TestCase
 		$this->expectOutputRegex('/Redirecting to http:\/\/www.example.com/');
 	}
 
+	public function testCanExtendConsole()
+	{
+		$controller = new Controllers\Console(['app_dir' => $this->getAppDir()]);
+		$controller->sayHello('Dave');
+		$this->expectOutputString('Hello, Dave');
+	}
+	
 	protected function getAppDir()
 	{
 		return __DIR__ .	DIRECTORY_SEPARATOR . 'resources';
