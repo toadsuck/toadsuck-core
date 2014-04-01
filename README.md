@@ -199,6 +199,42 @@ $this->template->unguard('html');
 $this->template->output('home/index', ['html' => '<p>Some <strong>markup</strong>.</p>']);
 ```
 
+#### Prefill
+I've added some functionality to the Template class for easily getting default values in views when the variable doesn't exist.
+
+``` php
+class Home extends Controller
+{
+	public function __construct()
+	{
+		// Set our default template.
+		$this->template->layout('layouts/default');
+	}
+
+	public function index()
+	{
+		// Grab our prefill content from the request and mass assign.
+		$this->template->setPrefill($this->request->request->all());
+		
+		// Or we can pull the prefill content from session.
+		$this->template->setPrefill($this->session->get('prefill');
+
+		// Render and Display the home/index view.
+		$this->template->output('home/index');
+	}
+}
+```
+
+Then in our view:
+
+```
+<!-- Prefill from the 'foo' variable if it exists. If not, it will default to null. -->
+<input type="text" name="foo" value="<?=$this->prefill('foo')?>" />
+
+<!-- Prefill from the 'bar' variable if it exists. If not, it will default to 'some default value'. -->
+<input type="text" name="bar" value="<?=$this->prefill('bar', 'some default value)?>" />
+
+```
 
 See the [Plates Project documentation](http://platesphp.com/) for more information on template usage.
 

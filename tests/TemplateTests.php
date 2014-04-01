@@ -53,4 +53,32 @@ class TemplateTests extends \PHPUnit_Framework_TestCase
 
 		$this->assertRegExp('/\<foo\>/', $output);
 	}
+	
+	public function testPrefill()
+	{
+		$template = new Template(__DIR__ . '/resources/views/');
+		
+		$template->layout('layouts/default');
+		$template->prefill = ['foo' => 'test'];
+		
+		$this->assertEquals('test', $template->prefill('foo'), 'Should return the value of the template variable.');
+	}
+
+	public function testPrefillNull()
+	{
+		$template = new Template(__DIR__ . '/resources/views/');
+		
+		$template->layout('layouts/default');
+		
+		$this->assertEquals(null, $template->prefill('foo'), 'Should return the default null for unset template variable.');
+	}
+
+	public function testPrefillDefault()
+	{
+		$template = new Template(__DIR__ . '/resources/views/');
+		
+		$template->layout('layouts/default');
+		
+		$this->assertEquals('default', $template->prefill('foo', 'default'), 'Should return the passed default for unset template variable.');
+	}
 }

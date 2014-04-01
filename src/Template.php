@@ -3,6 +3,7 @@ namespace Toadsuck\Core;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Extension to Plates to work better with our routing and auto-sanitize view variables.
@@ -104,6 +105,20 @@ class Template extends \League\Plates\Template
 			}
 		} else {
 			$this->unguarded[] = $key;
+		}
+	}
+	
+	public function setPrefill($data = [])
+	{
+		$this->data(['prefill' => $data]);
+	}
+	
+	public function prefill($key, $default = null)
+	{
+		if (isset($this->prefill)) {
+			return isset($this->prefill[$key]) ? $this->prefill[$key] : $default;
+		} else {
+			return $default;
 		}
 	}
 }
