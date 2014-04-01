@@ -22,7 +22,7 @@ class Template extends \League\Plates\Template
 
 	public function uri($resource)
 	{
-		return $_SERVER['SCRIPT_NAME'] . $resource;
+		return $_SERVER['SCRIPT_NAME'] . '/' . ltrim($resource, '/');
 	}
 
 	public function asset($resource)
