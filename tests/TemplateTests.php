@@ -24,7 +24,7 @@ class TemplateTests extends \PHPUnit_Framework_TestCase
 
 		$template->layout('layouts/default');
 
-		$output = $template->render('foo', ['foo' => '<foo>']);
+		$output = $template->render('foo', ['foo' => '<foo>', 'xss' => '<script>alert("xss")</script>']);
 
 		$this->assertRegExp('/&lt;foo&gt;/', $output);
 	}
