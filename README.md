@@ -217,7 +217,7 @@ class Home extends Controller
 		$this->template->setPrefill($this->request->request->all());
 		
 		// Or we can pull the prefill content from session.
-		$this->template->setPrefill($this->session->get('prefill');
+		$this->template->setPrefill($this->session->get('prefill'));
 
 		// Render and Display the home/index view.
 		$this->template->output('home/index');
