@@ -58,6 +58,16 @@ class Config
 		return $environment;
 	}
 	
+	public function getRequestedController($default = null)
+	{
+		return array_key_exists('TS_CONTROLLER', $_SERVER) ? $_SERVER['TS_CONTROLLER'] : $default;
+	}
+
+	public function getRequestedAction($default = null)
+	{
+		return array_key_exists('TS_ACTION', $_SERVER) ? $_SERVER['TS_ACTION'] : $default;
+	}
+	
 	public function __call($method, $args = [])
 	{
 		return call_user_func_array([$this->config, $method], $args);

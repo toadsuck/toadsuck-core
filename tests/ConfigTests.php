@@ -33,6 +33,34 @@ class ConfigTests extends \PHPUnit_Framework_TestCase
 		$config->load('envopts');
 		$this->assertEquals('test', $config->get('env'));
 	}
+
+	public function testCanGetRequestedController()
+	{
+		$_SERVER['TS_CONTROLLER'] = 'testcontroller';
+		$config = new Config($this->getAppDir());
+		$this->assertEquals('testcontroller', $config->getRequestedController());
+	}
+
+	public function testgetRequestedControllerShouldReturnDefault()
+	{
+		unset($_SERVER['TS_CONTROLLER']);
+		$config = new Config($this->getAppDir());
+		$this->assertEquals('none', $config->getRequestedController('none'));
+	}
+
+	public function testCanGetRequestedAction()
+	{
+		$_SERVER['TS_ACTION'] = 'testaction';
+		$config = new Config($this->getAppDir());
+		$this->assertEquals('testaction', $config->getRequestedAction());
+	}
+
+	public function testgetRequestedActionShouldReturnDefault()
+	{
+		unset($_SERVER['TS_ACTION']);
+		$config = new Config($this->getAppDir());
+		$this->assertEquals('none', $config->getRequestedAction('none'));
+	}
 	
 	protected function getAppDir()
 	{
