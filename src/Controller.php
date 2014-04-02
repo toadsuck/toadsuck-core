@@ -35,6 +35,13 @@ class Controller
 
 		// Setup the session
 		$this->session = new Session();
+		
+		// We need a unique session name for this app. Let's use last 10 characters the file path's sha1 hash.
+		try {
+			$this->session->setName('TSAPP' . substr(sha1(__FILE__), -10));
+		} catch (\LogicException $e) {
+			// Session already active, can't change it now!
+		}
 	}
 
 	/**
