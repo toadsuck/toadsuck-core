@@ -76,6 +76,10 @@ class Dispatcher
 			$id = null;
 		}
 
+		$_SERVER['TS_NAMESPACE'] = $this->namespace;
+		$_SERVER['TS_CONTROLLER'] = strtolower($controller);
+		$_SERVER['TS_ACTION'] = $action;
+		
 		// instantiate the controller class
 		$class = join('\\', [$this->namespace, 'Controllers', $controller]);
 
