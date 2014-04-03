@@ -286,7 +286,7 @@ class Home extends Controller
 
 ### $_GET and $_POST
 
-The Core Controller has a reference to the httpFoundation `Request` object, but I find the syntax for access `$_GET` and `$_POST` attributes less than ideal. So, I've built a wrapper around the httpFoundation `Request` object to make the syntax friendlier.
+The Core Controller has a reference to the httpFoundation `Request` object, but I find the syntax for accessing `$_GET` and `$_POST` attributes less than ideal. So, I've built a wrapper around the httpFoundation `Request` object to make the syntax friendlier.
 
 Examples:
 
