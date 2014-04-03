@@ -55,6 +55,12 @@ class Controller
 			$url = $this->template->uri($url);
 		}
 		
+		/**
+		 * You MUST call session_write_close() before performing a redirect to ensure the session is written,
+		 * otherwise it might not happen quickly enough to save your session changes.
+		 */
+		session_write_close();
+		
 		$response = new RedirectResponse($url);
 		$response->send();
 	}
