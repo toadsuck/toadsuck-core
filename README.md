@@ -214,7 +214,7 @@ class Home extends Controller
 	public function index()
 	{
 		// Grab our prefill content from the request and mass assign.
-		$this->template->setPrefill($this->request->request->all());
+		$this->template->setPrefill($this->input->get());
 		
 		// Or we can pull the prefill content from session.
 		$this->template->setPrefill($this->session->get('prefill'));
@@ -282,6 +282,51 @@ class Home extends Controller
 		$this->jsonp($data, 'callback');
 	}
 }
+```
+
+### $_GET and $_POST
+
+The Core Controller has a reference to the httpFoundation `Request` object, but I find the syntax for access `$_GET` and `$_POST` attributes less than ideal. So, I've built a wrapper around the httpFoundation `Request` object to make the syntax friendlier.
+
+Examples:
+
+``` php
+# Symfony way to access an attribute from $_POST
+$foo = $this->request->request->get('foo');
+
+# Toadsuck way to access an attribute from $_POST
+$foo = $this->input->post('foo');
+
+# Symfony way to access an attribute from $_GET
+$foo = $this->request->query->get('foo');
+
+# Toadsuck way to access an attribute from $_GET
+$foo = $this->input->get('foo');
+
+# Symfony way to access the entire $_POST array
+$post = $this->request->request->all();
+
+# Toadsuck way to access the entire $_POST array
+$post = $this->input->post();
+
+# Symfony way to access the entire $_GET array
+$get = $this->request->query->all();
+
+# Toadsuck way to access the entire $_GET array
+$get = $this->input->get();
+```
+
+`null` is returned when trying to access a non-existent attribute from get/post. Pass a 2nd parameter to `$this->input->get()` or `$this->input->post()` to serve as the default value if you want something other than `null`.
+
+``` php
+// Returns 'foo'
+$foo = $this->input->post('nonexistent', 'foo');
+```
+
+In the default `Request` object, you have to pass `true` as the 3rd argument to `$this->request->query->get()` in order to access "deep" array keys. This is defaulted to `true` in my override.
+
+``` php
+$bar = $this->input->get('foo[bar]'); 
 ```
 
 See the [Symfony Docs](http://symfony.com/doc/current/components/http_foundation/introduction.html) for more

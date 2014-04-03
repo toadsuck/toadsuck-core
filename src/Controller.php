@@ -4,6 +4,7 @@ namespace Toadsuck\Core;
 
 use Toadsuck\Core\Template;
 use Toadsuck\Core\Config;
+use Toadsuck\Core\Input;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +33,9 @@ class Controller
 		
 		// Get info about the HTTP Request
 		$this->request = Request::createFromGlobals();
+		
+		// Shortcuts to the request object for cleaner syntax.
+		$this->input = new Input($this->request);
 
 		// Setup the session
 		$this->session = new Session();
