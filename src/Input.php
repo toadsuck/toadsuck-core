@@ -14,7 +14,7 @@ class Input
 	public function __construct($request = null)
 	{
 		if (empty($request)) {
-			$this->request = Request::createFromGlobals();			
+			$this->request = Request::createFromGlobals();
 		} else {
 			$this->request = $request;
 		}
