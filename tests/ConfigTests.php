@@ -62,6 +62,31 @@ class ConfigTests extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('none', $config->getRequestedAction('none'));
 	}
 	
+	public function testGetBaseUrlShouldReturnConfigItem()
+	{
+		$config = new Config($this->getAppDir());
+		$this->assertEquals('http://test.server.name/toadsuck/', $config->getBaseUrl());
+	}
+	
+	public function testGetBaseUrlShouldReturnConfigItemWithArgs()
+	{
+		$config = new Config($this->getAppDir());
+		$this->assertEquals('http://test.server.name/toadsuck/test/', $config->getBaseUrl('test/'));
+		$this->assertEquals('http://test.server.name/toadsuck/foo/bar', $config->getBaseUrl('foo/bar'));
+	}
+	
+	public function testGetSiteUrlShouldReturnConfigItem()
+	{
+		$config = new Config($this->getAppDir());
+		$this->assertEquals('http://test.server.name/toadsuck/phpunit', $config->getSiteUrl());
+	}
+	
+	public function testGetSiteUrlShouldReturnConfigItemWithArgs()
+	{
+		$config = new Config($this->getAppDir());
+		$this->assertEquals('http://test.server.name/toadsuck/phpunit/test', $config->getSiteUrl('test'));
+	}
+	
 	protected function getAppDir()
 	{
 		return __DIR__ .	DIRECTORY_SEPARATOR . 'resources';
