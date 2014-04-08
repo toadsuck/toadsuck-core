@@ -68,6 +68,24 @@ class Config
 		return array_key_exists('TS_ACTION', $_SERVER) ? $_SERVER['TS_ACTION'] : $default;
 	}
 	
+	public function getBaseUrl($action = '')
+	{
+		$this->config->load('config');
+		$app_path = $this->config->get('app_path');
+
+		if(empty($app_path)) {
+			$app_path = @( $_SERVER["HTTPS"] != 'on' ) ? 'http://'.$_SERVER["SERVER_NAME"] :  'https://'.$_SERVER["SERVER_NAME"];
+			$app_path .= str_replace(basename($_SERVER["SCRIPT_NAME"]), '', $_SERVER["SCRIPT_NAME"]);
+		}
+		
+		return sprintf("%s/%s", rtrim($app_path, '/'), $action);
+	}
+	
+	public function getSiteUrl($action = '')
+	{
+		return rtrim($this->getBaseUrl(sprintf("%s/%s", basename($_SERVER["SCRIPT_NAME"]), $action)), '/');
+	}
+	
 	public function __call($method, $args = [])
 	{
 		return call_user_func_array([$this->config, $method], $args);
