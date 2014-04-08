@@ -73,7 +73,7 @@ class Config
 		$this->config->load('config');
 		$app_path = $this->config->get('app_path');
 
-		if(empty($app_path)) {
+		if (empty($app_path)) {
 			$app_path = @( $_SERVER["HTTPS"] != 'on' ) ? 'http://'.$_SERVER["SERVER_NAME"] :  'https://'.$_SERVER["SERVER_NAME"];
 			$app_path .= str_replace(basename($_SERVER["SCRIPT_NAME"]), '', $_SERVER["SCRIPT_NAME"]);
 		}
