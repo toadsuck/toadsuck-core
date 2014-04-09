@@ -157,6 +157,35 @@ Then load your config as you normally would. The configuration items will be mer
 
 See the [FuelPHP Docs](https://github.com/fuelphp/config/blob/master/README.md) for more information on configuration management.
 
+### Extra Configuration Helper Methods
+
+#### getBaseUrl()
+
+Returns the absolute url to the base of your application without the filename (ex. index.php). Accepts an optional path to append to the base url as an argument.
+
+``` php
+var_dump($this->config->getBaseUrl());
+// http://example.com/
+
+var_dump($this->config->getBaseUrl('image.jpg'));
+// http://example.com/image.jpg
+
+var_dump($this->config->getBaseUrl('home/index'));
+// http://example.com/home/index
+```
+
+#### getSiteUrl()
+
+Returns the absolute url to the base of your application, including the filename (ex. index.php). Accepts an optional path to append to the site url as an argument.
+
+``` php
+var_dump($this->config->getSiteUrl('home/index'));
+// http://example.com/index.php
+
+var_dump($this->config->getSiteUrl('home/index'));
+// http://example.com/index.php/home/index
+```
+
 ## Templates
 Templates are powered by the [Plates Project](http://platesphp.com/), which is part of [The League of Extraordinary Packages](http://thephpleague.com/).
 
