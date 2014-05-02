@@ -30,8 +30,8 @@ class Database
 
 		if (is_array($config)) {
 
-			// if the array is an array of arrays (i.e. check
-			if (self::checkMultiConnectionArray($config)) {
+			// missing 'driver' key, so it must be an array of arrays
+			if (!array_key_exists('driver', $config)) {
 
 				// if we have an array of connections, iterate through them.  connections should be stored in the form of name => conn_info
 				foreach ($config as $connection_name => $connection_info) {
@@ -87,27 +87,5 @@ class Database
 		}
 
 		return $opts;
-	}
-
-	public static function checkMultiConnectionArray($config)
-	{
-		foreach ($config as $info) {
-			// we have an array of connection info, so it's multi-connection
-			if (is_array($info)) {
-				return true;
-			}
-
-			try {
-				// try to parse the DSN, if we have a driver, then it's a sign of a DSN string and is multi-connection
-				$dsn = (object)DsnParser::parseUrl($info)->toArray();
-				if (!empty($dsn->driver)) {
-					return true;
-				} else {
-					return false;
-				}
-			} catch (\Prelude\Dsn\DsnException $ex) {
-				return false;
-			}
-		}
 	}
 }
