@@ -54,7 +54,7 @@ class Database
 		// add each connection, then set as global and boot
 		foreach ($options as $name => $info) {
 			$capsule->addConnection($info, $name);
-			self::$driver[$name] = $options['driver'];
+			self::$driver[$name] = $info['driver'];
 		}
 
 		$capsule->setAsGlobal();
