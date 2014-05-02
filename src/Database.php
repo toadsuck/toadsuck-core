@@ -89,7 +89,7 @@ class Database
 		return $opts;
 	}
 
-	public function checkMultiConnectionArray($config)
+	public static function checkMultiConnectionArray($config)
 	{
 		foreach ($config as $info) {
 			// we have an array of connection info, so it's multi-connection
