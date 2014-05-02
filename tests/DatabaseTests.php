@@ -53,7 +53,7 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 
 	public function testCanQueryORM()
 	{
-		$this->databaseInit();
+		$this->databaseInitSimple();
 
 		$result = \Toadsuck\Core\Tests\App\Models\Captain::where('last_name', 'Kirk')->first();
 		$this->assertEquals('James', $result->first_name);
@@ -61,7 +61,7 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 
 	public function testChainedQueryBuilder()
 	{
-		$this->databaseInit();
+		$this->databaseInitSimple();
 
 		$result = (object) \Illuminate\Database\Capsule\Manager::table('captains')->where('last_name', 'Kirk')->first();
 		$this->assertEquals('James', $result->first_name);
@@ -69,7 +69,7 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 
 	public function testUnhainedQueryBuilder()
 	{
-		$this->databaseInit();
+		$this->databaseInitSimple();
 
 		$query = \Illuminate\Database\Capsule\Manager::table('captains');
 		$query->where('last_name', 'Kirk');
@@ -80,7 +80,7 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 
 	public function testORMChainedQuery()
 	{
-		$this->databaseInit();
+		$this->databaseInitSimple();
 
 		$result = (object) \Toadsuck\Core\Tests\App\Models\Captain::queryBuilder()->where('last_name', 'Kirk')->first();
 		$this->assertEquals('James', $result->first_name);
@@ -88,7 +88,7 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 
 	public function testORMUnchainedQuery()
 	{
-		$this->databaseInit();
+		$this->databaseInitSimple();
 
 		$query = \Toadsuck\Core\Tests\App\Models\Captain::queryBuilder();
 		$query->where('last_name', 'Kirk');
@@ -98,7 +98,7 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 
 	public function testORMQueryBuilderShouldReturnEmptyArray()
 	{
-		$this->databaseInit();
+		$this->databaseInitSimple();
 
 		$result = \Toadsuck\Core\Tests\App\Models\Captain::search(['first_name' => 'James', 'last_name' => 'Picard']);
 
@@ -107,7 +107,7 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 
 	public function testORMQueryBuilderShouldReturnOneResult()
 	{
-		$this->databaseInit();
+		$this->databaseInitSimple();
 
 		$result = \Toadsuck\Core\Tests\App\Models\Captain::search(['first_name' => 'James']);
 
@@ -116,20 +116,46 @@ class DatabaseTests extends \PHPUnit_Framework_TestCase
 
 	public function testORMQueryBuilderShouldReturnThreeResults()
 	{
-		$this->databaseInit();
+		$this->databaseInitSimple();
 
 		$result = \Toadsuck\Core\Tests\App\Models\Captain::search(['first_name' => 'J']);
 
 		$this->assertTrue(count($result) == 3);
 	}
 
-	protected function getTestDsn()
+	public function testCanQueryMultipleORM()
+	{
+		$this->databaseInitComplex();
+
+		$beer_result = App\Models\Beer::find(1);
+		$captain_result = App\Models\CaptainComplex::find(1);
+
+		$this->assertEquals('IPA', $beer_result->name);
+		$this->assertEquals('James', $captain_result->first_name);
+	}
+
+	protected function getTestDsnSimple()
 	{
 		return ['driver' => 'sqlite','database' => __DIR__ . '/resources/storage/example.sqlite'];
 	}
 
-	protected function databaseInit()
+	protected function getTestDsnComplex()
 	{
-		Database::init($this->getTestDsn());
+		return [
+			'example' =>
+				['driver' => 'sqlite','database' => __DIR__ . '/resources/storage/example.sqlite'],
+			'beers' =>
+				['driver' => 'sqlite','database' => __DIR__ . '/resources/storage/beers.sqlite']
+		];
+	}
+
+	protected function databaseInitSimple()
+	{
+		Database::init($this->getTestDsnSimple());
+	}
+
+	protected function databaseInitComplex()
+	{
+		Database::init($this->getTestDsnComplex());
 	}
 }
