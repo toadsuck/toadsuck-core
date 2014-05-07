@@ -26,19 +26,53 @@ class Controller
 		$app_dir = array_key_exists('app_dir', $opts) ? $opts['app_dir'] : null;
 
 		// Set up configs.
-		$this->config = new Config($app_dir);
+		$this->initializeConfig($app_dir);
 
 		// Set up the template engine.
-		$this->template = new Template($this->config->resolvePath('views'));
+		$this->initializeTemplate();
 
-		// Get info about the HTTP Request
-		$this->request = Request::createFromGlobals();
-
-		// Shortcuts to the request object for cleaner syntax.
-		$this->input = new Input($this->request);
+		// Setup our HTTP Request object.
+		$this->initializeRequest();
 
 		// Initialize the Session.
 		$this->initializeSession();
+	}
+
+	/**
+	 * Set up the configuration manager.
+	 * @param string $app_dir Filesystem path to the config directory
+	 */
+	public function initializeConfig($app_dir = null)
+	{
+		$this->config = new Config($app_dir);
+	}
+
+	/**
+	 * Set up the template system
+	 * @param string $directory Filesystem path to the views directory.
+	 */
+	public function initializeTemplate($directory = null)
+	{
+		if (empty($directory)) {
+			$directory = $this->config->resolvePath('views');
+		}
+
+		$this->template = new Template($directory);
+	}
+
+	/**
+	 * Get info about the HTTP Request
+	 */
+	public function initializeRequest($request = null)
+	{
+		if (empty($request)) {
+			$this->request = Request::createFromGlobals();
+		} else {
+			$this->request = $request;
+		}
+
+		// Shortcuts to the request object for cleaner syntax.
+		$this->input = new Input($this->request);
 	}
 
 	/**
