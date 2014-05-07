@@ -261,7 +261,7 @@ Then in our view:
 <input type="text" name="foo" value="<?=$this->prefill('foo')?>" />
 
 <!-- Prefill from the 'bar' variable if it exists. If not, it will default to 'some default value'. -->
-<input type="text" name="bar" value="<?=$this->prefill('bar', 'some default value)?>" />
+<input type="text" name="bar" value="<?=$this->prefill('bar', 'some default value')?>" />
 
 ```
 
@@ -420,7 +420,7 @@ class Widget extends Model
 use Toadsuck\Core\Database as DB;
 
 /*
-DSN can be pear-style DSN string: mysql://username:password@host/database OR an array
+DSN can be pear-style DSN string: mysql://username:password@host/database OR an array of connection params
 
 $defaults = [
 	'driver'	=> 'mysql',
@@ -459,3 +459,46 @@ use Illuminate\Database\Capsule\Manager as QueryBuilder;
 $result = QueryBuilder::table('captains')->where('lastname', 'Kirk')->get();
 ```
 > See the [Laravel Database Documentation](http://laravel.com/docs/database) for more info on the fluent query builder.
+
+#### Multiple Database Connection Support
+To initialize Eloquent with multiple database connections, you can pass an array of connection params to `DB::init()`.
+
+```php
+# DSN Strings
+$dsn = ['default' => 'mysql://username:password@hostname/primarydb', 'otherdb' => 'mysql://username:password@hostname/otherdb'];
+
+DB::init($dsn);
+```
+
+```php
+# Connection setting array
+$dsn = [
+	'default' => [
+		'driver'	=> 'mysql',
+		'host'		=> 'localhost',
+		'database'	=> 'primarydb',
+		'username'	=> 'username',
+		'password'	=> 'password'
+	],
+	'otherdb' => [
+		'driver'	=> 'mysql',
+		'host'		=> 'localhost',
+		'database'	=> 'otherdb',
+		'username'	=> 'username',
+		'password'	=> 'password'
+	]
+];
+
+DB::init($dsn);		
+```
+Then in your model, specify the connection to use.
+
+```php
+<?php
+use Illuminate\Database\Eloquent\Model;
+class Widget extends Model
+{
+	public $timestamps = false;
+	public $connection = 'otherdb';
+}
+```
