@@ -18,9 +18,12 @@ Installation of this package is easy with Composer. If you aren't familiar with 
 
 
 ``` json
+{
 	"require": {
-		"toadsuck/core": "dev-develop-2"
-	}
+        "toadsuck/core": "dev-develop-2"
+    },
+	"minimum-stability": "dev"
+}
 ```
 ## Suggested Directory Structure
 
