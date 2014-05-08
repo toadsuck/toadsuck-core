@@ -19,7 +19,7 @@ Installation of this package is easy with Composer. If you aren't familiar with 
 
 ``` json
 	"require": {
-		"toadsuck/core": "2.*@dev"
+		"toadsuck/core": "dev-develop-2"
 	}
 ```
 ## Suggested Directory Structure

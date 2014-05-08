@@ -31,10 +31,5 @@
 		"phpunit/phpunit": "3.7.*",
 		"squizlabs/php_codesniffer": "1.*"
 	},
-	"extra": {
-		"branch-alias": {
-			"dev-develop-2": "2.0.x-dev"
-		}
-	},
 	"minimum-stability": "dev"
 }
