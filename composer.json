@@ -20,7 +20,7 @@
 	},
 	"require": {
 		"php": ">= 5.4",
-		"aura/router": "2.*@dev",
+		"aura/router": "2.0.*@dev",
 		"league/plates": "1.0.*",
 		"fuelphp/config": "dev-master",
 		"illuminate/database": "4.2.*@dev",
