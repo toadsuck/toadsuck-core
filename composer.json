@@ -9,8 +9,8 @@
 			"email": "jgmoody@gmail.com"
 		}
 	],
-	"autoload":{
-		"psr-4":{
+	"autoload": {
+		"psr-4": {
 			"Toadsuck\\Core\\Tests\\": "tests/",
 			"Toadsuck\\Core\\Tests\\App\\": "tests/resources/",
 			"Toadsuck\\Core\\Tests\\App\\Controllers\\": "tests/resources/controllers/",
@@ -18,7 +18,6 @@
 			"Toadsuck\\Core\\": "src/"
 		}
 	},
-
 	"require": {
 		"php": ">= 5.4",
 		"aura/router": "2.*@dev",
@@ -28,11 +27,14 @@
 		"prelude/prelude-dsn": "dev-master",
 		"symfony/http-foundation": "2.5.*@dev"
 	},
-
 	"require-dev": {
 		"phpunit/phpunit": "3.7.*",
 		"squizlabs/php_codesniffer": "1.*"
 	},
-	
+	"extra": {
+		"branch-alias": {
+			"dev-develop-2": "2.0.x-dev"
+		}
+	},
 	"minimum-stability": "dev"
 }

@@ -16,20 +16,11 @@ Learn more at [The Toadsuck Project](http://toadsuck.github.io) or see [Toadsuck
 ## Installation
 Installation of this package is easy with Composer. If you aren't familiar with the Composer Dependency Manager for PHP, [you should read this first](https://getcomposer.org/doc/00-intro.md).
 
-If you don't already have [Composer](https://getcomposer.org) installed (either globally or in your project), you can install it like this:
-
-``` bash
-$ curl -sS https://getcomposer.org/installer | php
-```
-
-Create a file named composer.json someplace (usually in the root of your project) with the following content.
 
 ``` json
-{
 	"require": {
-		"toadsuck/core": "dev-master"
+		"toadsuck/core": "2.*@dev"
 	}
-}
 ```
 ## Suggested Directory Structure
 
