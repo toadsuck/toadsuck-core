@@ -3,7 +3,7 @@
 namespace Toadsuck\Core;
 
 /**
- * Thin wrapper for Fuel\Config.
+ * Thin wrapper for werx\config.
  */
 class Config
 {
@@ -26,17 +26,9 @@ class Config
 		$path = $this->resolvePath('config');
 		
 		// Set up configs.
-		if (!class_exists('Arr')) {
-			class_alias('Fuel\Common\Arr', 'Arr');
-		}
+		$provider = new \werx\Config\Providers\ArrayProvider($path);
+		$this->config = new \werx\Config\Container($provider, $environment);
 
-		$this->config = new \Fuel\Config\Container($environment);
-		$this->config->setConfigFolder('');
-		
-		if (!empty($path)) {
-			$this->config->addPath($path);
-		}
-		
 		return $this->config;
 	}
 	

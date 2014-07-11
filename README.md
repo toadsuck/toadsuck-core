@@ -8,7 +8,7 @@
 - HTTP Abstraction - [Symfony\HttpFoundation](https://github.com/symfony/HttpFoundation)
 - Templates - [Plates Native PHP Templates](http://platesphp.com/)
 - Database Abstraction - [Illuminate\Database](https://github.com/illuminate/database)
-- Configuration Management - [FuelPHP\Config](https://github.com/fuelphp/config)
+- Configuration Management - [werx\Config](https://github.com/werx/config)
 - Unit Tests - [PHPUnit](https://github.com/sebastianbergmann/phpunit) (of course, why use anything else?)
 
 Learn more at [The Toadsuck Project](http://toadsuck.github.io) or see [Toadsuck.Skeleton](https://github.com/toadsuck/toadsuck-skeleton) for a reference implementation.
@@ -120,7 +120,7 @@ src/
 For more information on routing options, see <https://github.com/auraphp/Aura.Router>.
 
 ## Configuration
-The configuration manger is built on [FuelPHP\Config](https://github.com/fuelphp/config)
+The configuration manger is built on [werx\Config](https://github.com/werx/config)
 
 ### Basic Configuration Usage
 
@@ -149,7 +149,7 @@ You can tell the app which environment you are running in by modifying the conte
 
 Then load your config as you normally would. The configuration items will be merged between the default config environment-specific overrides.
 
-See the [FuelPHP Docs](https://github.com/fuelphp/config/blob/master/README.md) for more information on configuration management.
+See the [werx\Congif Docs](https://github.com/werx/config/blob/master/README.md) for more information on configuration management.
 
 ### Extra Configuration Helper Methods
 
