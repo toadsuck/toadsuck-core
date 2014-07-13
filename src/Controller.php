@@ -31,7 +31,7 @@ class Controller
 		// Set up the template engine.
 		$this->initializeTemplate();
 
-		// Setup our HTTP Request object.
+		// Set up our HTTP Request object.
 		$this->initializeRequest();
 
 		// Initialize the Session.
@@ -57,7 +57,11 @@ class Controller
 			$directory = $this->config->resolvePath('views');
 		}
 
-		$this->template = new Template($directory);
+		$this->template = new Template($directory, $this->config);
+
+		// Add our url builder to the template.
+		$extension = new \werx\Url\Extensions\Plates();
+		$this->template->loadExtension($extension);
 	}
 
 	/**
@@ -112,25 +116,22 @@ class Controller
 	/**
 	 * Internal or External Redirect to the specified url
 	 */
-	public function redirect($url, $query = [], $is_query_string = false)
+	public function redirect($url, $params = [], $is_query_string = false)
 	{
-		if (!empty($query)) {
-			if ($is_query_string && is_array($query)) {
-				# home/people?lastname=smith
-				$url = rtrim($url, DIRECTORY_SEPARATOR) . '?' . http_build_query($query);
-			} elseif (is_array($query)) {
-				# home/people/1,2
-				$url = rtrim($url, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . join(',', $query);
-			} else {
-				# home/people/1
-				$url = rtrim($url, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . urlencode($query);
-			}
-		}
-
 		if (!preg_match('/^http/', $url)) {
-			// Internal redirect
-			$url = DIRECTORY_SEPARATOR . trim($url, DIRECTORY_SEPARATOR);
-			$url = $this->template->uri($url);
+			$url_builder = new \werx\Url\Builder;
+
+			if (!empty($params)) {
+				if ($is_query_string && is_array($params)) {
+					$url = $url_builder->query($url, $params);
+				} else {
+					$url = $url_builder->action($url, $params);
+				}
+			}
+		} else {
+			// External url. Just do a basic expansion.
+			$url_builder = new \Rize\UriTemplate;
+			$url = $url_builder->expand($url, $params);
 		}
 
 		/**
@@ -163,5 +164,15 @@ class Controller
 		// Send a 404 for any methods that don't exist.
 		$response = new Response('Not Found', 404, ['Content-Type' => 'text/plain']);
 		$response->send();
+	}
+
+	public function getRequestedController($default = null)
+	{
+		return array_key_exists('TS_CONTROLLER', $_SERVER) ? $_SERVER['TS_CONTROLLER'] : $default;
+	}
+
+	public function getRequestedAction($default = null)
+	{
+		return array_key_exists('TS_ACTION', $_SERVER) ? $_SERVER['TS_ACTION'] : $default;
 	}
 }

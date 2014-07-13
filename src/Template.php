@@ -107,12 +107,12 @@ class Template extends \League\Plates\Template
 			$this->unguarded[] = $key;
 		}
 	}
-	
+
 	public function setPrefill($data = [])
 	{
 		$this->data(['prefill' => $data]);
 	}
-	
+
 	public function prefill($key, $default = null)
 	{
 		if (isset($this->prefill)) {
@@ -120,5 +120,10 @@ class Template extends \League\Plates\Template
 		} else {
 			return $default;
 		}
+	}
+
+	public function loadExtension($extension)
+	{
+		return $this->engine->loadExtension($extension);
 	}
 }

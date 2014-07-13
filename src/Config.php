@@ -49,37 +49,51 @@ class Config
 		
 		return $environment;
 	}
-	
-	public function getRequestedController($default = null)
-	{
-		return array_key_exists('TS_CONTROLLER', $_SERVER) ? $_SERVER['TS_CONTROLLER'] : $default;
-	}
 
-	public function getRequestedAction($default = null)
-	{
-		return array_key_exists('TS_ACTION', $_SERVER) ? $_SERVER['TS_ACTION'] : $default;
-	}
-	
-	public function getBaseUrl($action = '')
+	public function getBaseUrl($include_script_name = false)
 	{
 		$this->config->load('config');
-		$app_path = $this->config->get('app_path');
+		$base_url = $this->config->get('base_url');
 
-		if (empty($app_path)) {
-			$app_path = @( $_SERVER["HTTPS"] != 'on' ) ? 'http://'.$_SERVER["SERVER_NAME"] :  'https://'.$_SERVER["SERVER_NAME"];
-			$app_path .= str_replace(basename($_SERVER["SCRIPT_NAME"]), '', $_SERVER["SCRIPT_NAME"]);
+		if (empty($base_url)) {
+			// No base_url defined in the config. Work it out based on server name.
+			// This won't work if the app is running behind a proxied URL.
+			$protocol = 'http://';
+
+			if (array_key_exists('HTTPS', $_SERVER) && strtolower($_SERVER['HTTPS']) == 'on') {
+				$protocol = 'https://';
+			}
+
+			$base_url = $protocol . $_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']);
 		}
-		
-		return sprintf("%s/%s", rtrim($app_path, '/'), $action);
+
+		$base_url = rtrim($base_url, '/') . '/';
+
+		if ($include_script_name) {
+			# http://example.com/path/to/app/index.php
+			return $base_url . basename($_SERVER['SCRIPT_NAME']);
+		} else {
+			# http://example.com/path/to/app/
+			return $base_url;
+		}
 	}
-	
-	public function getSiteUrl($action = '')
-	{
-		return rtrim($this->getBaseUrl(sprintf("%s/%s", basename($_SERVER["SCRIPT_NAME"]), $action)), '/');
-	}
-	
+
 	public function __call($method, $args = [])
 	{
 		return call_user_func_array([$this->config, $method], $args);
+	}
+
+	public function __get($property = null) {
+
+		switch($property) {
+			case 'base_url':
+				return $this->getBaseUrl();
+				break;
+			case 'script_url':
+				return $this->getScriptUrl();
+				break;
+			default:
+				return parent::__get($property);
+		}
 	}
 }
