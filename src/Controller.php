@@ -14,11 +14,12 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class Controller
 {
-	public $plates = null;
-	public $template = null;
-	public $config = null;
-	public $request = null;
+	public $plates;
+	public $template;
+	public $config;
+	public $request;
 	public $ds = DIRECTORY_SEPARATOR;
+	public $app;
 
 	public function __construct($opts = [])
 	{
@@ -144,21 +145,6 @@ class Controller
 		$response->send();
 	}
 
-	public function json($content = [])
-	{
-		$response = new JsonResponse();
-		$response->setData($content);
-		$response->send();
-	}
-
-	public function jsonp($content = [], $jsonCallback = 'callback')
-	{
-		$response = new JsonResponse();
-		$response->setData($content);
-		$response->setCallback($jsonCallback);
-		$response->send();
-	}
-
 	public function __call($method = null, $args = null)
 	{
 		// Send a 404 for any methods that don't exist.
@@ -168,11 +154,11 @@ class Controller
 
 	public function getRequestedController($default = null)
 	{
-		return array_key_exists('TS_CONTROLLER', $_SERVER) ? $_SERVER['TS_CONTROLLER'] : $default;
+		return $this->app->controller;
 	}
 
 	public function getRequestedAction($default = null)
 	{
-		return array_key_exists('TS_ACTION', $_SERVER) ? $_SERVER['TS_ACTION'] : $default;
+		return $this->app->action;
 	}
 }

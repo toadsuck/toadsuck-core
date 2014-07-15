@@ -9,9 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 class Dispatcher
 {
 	public $opts = [];
-	public $router = null;
+	public $router;
 	public $namespace = 'Toadsuck\Skeleton';
-	public $app_dir = null;
+	public $controller;
+	public $action;
+	public $id;
+	public $app_dir;
 
 	public function __construct($opts = [])
 	{
@@ -26,7 +29,7 @@ class Dispatcher
 			$GLOBALS['TOADSUCK_BASE_PATH'] = $opts['app_dir'];
 		}
 		
-		$this->getRoutes();
+		$this->initializeRoutes();
 	}
 
 	public function dispatch()
@@ -40,7 +43,7 @@ class Dispatcher
 		if ($path != '/') {
 			$path = rtrim($path, '/');
 		}
-		
+
 		// Find a matching route
 		$route = $this->router->match($path, $_SERVER);
 
@@ -49,37 +52,12 @@ class Dispatcher
 			return $this->pageNotFound();
 		}
 
-		// does the route indicate a controller?
-		if (isset($route->params['controller'])) {
-			// take the controller class directly from the route
-			$controller = ucfirst(strtolower($route->params['controller']));
-		} else {
-			// use a default controller
-			$controller = 'Home';
-		}
-
-		// does the route indicate an action?
-		if (isset($route->params['action'])) {
-			// take the action method directly from the route
-			$action = $route->params['action'];
-		} else {
-			// use a default action
-			$action = 'index';
-		}
-
-		// does the route indicate an id?
-		if (isset($route->params['id'])) {
-			// take the action method directly from the route
-			$id = $route->params['id'];
-		} else {
-			// use a default action
-			$id = null;
-		}
+		list($controller, $action, $id) = $this->getAction($route);
 
 		$_SERVER['TS_NAMESPACE'] = $this->namespace;
-		$_SERVER['TS_CONTROLLER'] = strtolower($controller);
-		$_SERVER['TS_ACTION'] = $action;
-		
+		$this->controller = strtolower($controller);
+		$this->action = $action;
+
 		// instantiate the controller class
 		$class = join('\\', [$this->namespace, 'Controllers', $controller]);
 
@@ -87,6 +65,7 @@ class Dispatcher
 			return $this->pageNotFound();
 		} else {
 			$page = new $class();
+			$page->app = $this;
 
 			// invoke the action method with the id
 			$page->$action($id);
@@ -96,7 +75,7 @@ class Dispatcher
 	/**
 	 * What routes have been configured for this app?
 	 */
-	public function getRoutes()
+	public function initializeRoutes()
 	{
 		$router_factory = new RouterFactory;
 		$router = $router_factory->newInstance();
@@ -131,5 +110,41 @@ class Dispatcher
 	public function getSrcDir()
 	{
 		return array_key_exists('app_dir', $this->opts) ? $this->opts['app_dir'] . '/src' : dirname(__DIR__) . '/src';
+	}
+
+	/**
+	 * @param $route
+	 * @return array
+	 */
+	public function getAction($route)
+	{
+		// does the route indicate a controller?
+		if (isset($route->params['controller'])) {
+			// take the controller class directly from the route
+			$controller = ucfirst(strtolower($route->params['controller']));
+		} else {
+			// use a default controller
+			$controller = 'Home';
+		}
+
+		// does the route indicate an action?
+		if (isset($route->params['action'])) {
+			// take the action method directly from the route
+			$action = $route->params['action'];
+		} else {
+			// use a default action
+			$action = 'index';
+		}
+
+		// does the route indicate an id?
+		if (isset($route->params['id'])) {
+			// take the action method directly from the route
+			$id = $route->params['id'];
+			return array($controller, $action, $id);
+		} else {
+			// use a default action
+			$id = null;
+			return array($controller, $action, $id);
+		}
 	}
 }
