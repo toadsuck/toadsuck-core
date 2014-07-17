@@ -27,6 +27,7 @@ class ControllerTests extends \PHPUnit_Framework_TestCase
 
 	public function testCanOutputJson()
 	{
+		$this->markTestIncomplete();
 		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
 		$controller->json(['foo' => 'bar']);
 
@@ -35,6 +36,7 @@ class ControllerTests extends \PHPUnit_Framework_TestCase
 
 	public function testCanOutputJsonp()
 	{
+		$this->markTestIncomplete();
 		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
 		$controller->jsonp(['foo' => 'bar']);
 
@@ -76,9 +78,9 @@ class ControllerTests extends \PHPUnit_Framework_TestCase
 	public function testCanRedirectLocalArray()
 	{
 		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
-		$controller->redirect('home/people', [1, 2]);
+		$controller->redirect('home/people/{foo},{bar}', ['foo' => 'Foo', 'bar' => 'Bar']);
 
-		$this->expectOutputRegex('/home\/people\/1,2/');
+		$this->expectOutputRegex('/home\/people\/Foo,Bar/');
 	}
 
 	public function testCanRedirectLocalQueryString()

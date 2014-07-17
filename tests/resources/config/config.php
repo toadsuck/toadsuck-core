@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'app_path' => 'http://test.server.name/toadsuck/'
+	'base_url' => 'http://test.server.name/toadsuck/'
 ];
