@@ -145,6 +145,21 @@ class Controller
 		$response->send();
 	}
 
+	public function json($content = [])
+	{
+		$response = new JsonResponse();
+		$response->setData($content);
+		$response->send();
+	}
+
+	public function jsonp($content = [], $jsonCallback = 'callback')
+	{
+		$response = new JsonResponse();
+		$response->setData($content);
+		$response->setCallback($jsonCallback);
+		$response->send();
+	}
+
 	public function __call($method = null, $args = null)
 	{
 		// Send a 404 for any methods that don't exist.

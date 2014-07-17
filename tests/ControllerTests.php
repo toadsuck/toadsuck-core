@@ -27,7 +27,6 @@ class ControllerTests extends \PHPUnit_Framework_TestCase
 
 	public function testCanOutputJson()
 	{
-		$this->markTestIncomplete();
 		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
 		$controller->json(['foo' => 'bar']);
 
@@ -36,11 +35,10 @@ class ControllerTests extends \PHPUnit_Framework_TestCase
 
 	public function testCanOutputJsonp()
 	{
-		$this->markTestIncomplete();
 		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
 		$controller->jsonp(['foo' => 'bar']);
 
-		$this->expectOutputString('callback({"foo":"bar"});');
+		$this->expectOutputString('/**/callback({"foo":"bar"});');
 	}
 
 	public function testCanRenderTemplate()
