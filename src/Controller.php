@@ -169,11 +169,22 @@ class Controller
 
 	public function getRequestedController($default = null)
 	{
-		return $this->app->controller;
+		if (property_exists($this, 'app') && is_object($this->app) && property_exists($this->app, 'controller')) {
+			return $this->app->controller;
+		} elseif (!empty($default)) {
+			return $default;
+		} else {
+			$reflect = new \ReflectionClass($this);
+			return strtolower($reflect->getShortName());
+		}
 	}
 
-	public function getRequestedAction($default = null)
+	public function getRequestedAction($default = 'index')
 	{
-		return $this->app->action;
+		if (property_exists($this, 'app') && is_object($this->app) && property_exists($this->app, 'action')) {
+			return $this->app->action;
+		} else {
+			return $default;
+		}
 	}
 }

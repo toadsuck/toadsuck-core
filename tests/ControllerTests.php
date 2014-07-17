@@ -110,6 +110,30 @@ class ControllerTests extends \PHPUnit_Framework_TestCase
 		$this->expectOutputString('default', "No prefill in session should render default value");
 	}
 
+	public function testCanGetRequestedController()
+	{
+		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
+		$this->assertEquals('home', $controller->getRequestedController());
+	}
+
+	public function testgetRequestedControllerShouldReturnDefault()
+	{
+		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
+		$this->assertEquals('none', $controller->getRequestedController('none'));
+	}
+
+	public function testCanGetRequestedAction()
+	{
+		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
+		$this->assertEquals('index', $controller->getRequestedAction());
+	}
+
+	public function testgetRequestedActionShouldReturnDefault()
+	{
+		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
+		$this->assertEquals('none', $controller->getRequestedAction('none'));
+	}
+
 	protected function getAppDir()
 	{
 		return __DIR__ . DIRECTORY_SEPARATOR . 'resources';
