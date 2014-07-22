@@ -18,6 +18,7 @@ class Controller
 	public $template;
 	public $config;
 	public $request;
+	public $session;
 	public $ds = DIRECTORY_SEPARATOR;
 	public $app;
 
