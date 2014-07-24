@@ -103,8 +103,8 @@ class Controller
 			// Default session expiration 1 hour.
 			// Can be overridden in method param or by setting session_expiration in config.php
 			$session_expiration = !empty($session_expiration)
-										? $session_expiration
-										: $this->config->get('session_expiration', 3600);
+				? $session_expiration
+				: $this->config->get('session_expiration', 3600);
 
 			// Is this session too old?
 			if (time() - $this->session->getMetadataBag()->getLastUsed() > $session_expiration) {
@@ -123,12 +123,10 @@ class Controller
 		if (!preg_match('/^http/', $url)) {
 			$url_builder = new \werx\Url\Builder;
 
-			if (!empty($params)) {
-				if ($is_query_string && is_array($params)) {
-					$url = $url_builder->query($url, $params);
-				} else {
-					$url = $url_builder->action($url, $params);
-				}
+			if ($is_query_string && is_array($params)) {
+				$url = $url_builder->query($url, $params);
+			} else {
+				$url = $url_builder->action($url, $params);
 			}
 		} else {
 			// External url. Just do a basic expansion.
