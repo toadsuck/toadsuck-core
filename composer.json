@@ -22,7 +22,7 @@
 		"php": ">= 5.4",
 		"aura/router": "2.0.*@dev",
 		"league/plates": "2.1.0",
-		"werx/config": "0.1.*",
+		"werx/config": "0.2.*",
 		"illuminate/database": "4.2.*@dev",
 		"prelude/prelude-dsn": "dev-master",
 		"symfony/http-foundation": "2.5.*@dev",
