@@ -21,9 +21,13 @@ class Controller
 	public $session;
 	public $ds = DIRECTORY_SEPARATOR;
 	public $app;
+	public $input;
 
 	public function __construct($opts = [])
 	{
+		// Set the instance of our application
+		$this->app = $GLOBALS['app_instance'];
+
 		// Where is our app's source code?
 		$app_dir = array_key_exists('app_dir', $opts) ? $opts['app_dir'] : null;
 

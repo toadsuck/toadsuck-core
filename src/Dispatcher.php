@@ -64,6 +64,7 @@ class Dispatcher
 		if (!class_exists($class)) {
 			return $this->pageNotFound();
 		} else {
+			$GLOBALS['app_instance'] = $this;
 			$page = new $class();
 			$page->app = $this;
 
