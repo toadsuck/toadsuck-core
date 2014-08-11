@@ -94,8 +94,16 @@ class Controller
 	 */
 	protected function initializeSession($session_expiration = null)
 	{
-		// Setup the session
-		$this->session = new Session();
+		/**
+		 * Setup the session with cookie expiration of one week. This will
+		 * allow the session to persist even if the browser window is closed.
+		 * The session expiration will still be respected (default 1 hour).
+		 */
+		$this->session = new Session(
+			new \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage(
+				['cookie_lifetime' => 604800]
+			)
+		);
 
 		$this->config->load('config');
 
