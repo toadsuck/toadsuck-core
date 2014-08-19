@@ -77,7 +77,6 @@ class Template extends \League\Plates\Template
 			while (list($key) = each($var)) {
 				// casting key to string for the case of numeric indexed arrays, i.e. 0, 1, etc. b/c 0 == any string in php
 				if (!in_array((string)$key, $this->unguarded)) {
-					// We don't want to escape this item
 					$var[$key] = $this->scrub($var[$key]);
 				}
 			}

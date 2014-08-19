@@ -38,7 +38,7 @@ class ControllerTests extends \PHPUnit_Framework_TestCase
 		$controller = new Controllers\Home(['app_dir' => $this->getAppDir()]);
 		$controller->jsonp(['foo' => 'bar']);
 
-		$this->expectOutputString('callback({"foo":"bar"});');
+		$this->expectOutputString('/**/callback({"foo":"bar"});');
 	}
 
 	public function testCanRenderTemplate()
